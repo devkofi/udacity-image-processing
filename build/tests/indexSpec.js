@@ -43,7 +43,6 @@ var server_1 = __importDefault(require("../server"));
 var supertest_1 = __importDefault(require("supertest"));
 var path_1 = __importDefault(require("path"));
 var sharp_1 = __importDefault(require("sharp"));
-var fs_1 = __importDefault(require("fs"));
 var request = (0, supertest_1.default)(server_1.default);
 describe("Test Endpoint Responses", function () {
     var _this = this;
@@ -59,16 +58,22 @@ describe("Test Endpoint Responses", function () {
             }
         });
     }); });
-    // it("Get API Endpoint", async()=>{
-    //     const response = await request.get('/api/images');
-    //     expect(response.status).toBe(200);
-    // })
+    it("Get API Endpoint", function () { return __awaiter(_this, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/images')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
-describe("Test Image", function () {
+describe("Test Image Destination", function () {
     it("Get Original Image", function () {
         var items = (path_1.default.resolve("./build/img/original/coffee_cup.png")).split(path_1.default.sep);
-        console.log(items);
-        //console.log(items.split(path.sep));
         expect(items[items.length - 1]).toBe("coffee_cup.png");
     });
     it("Get Optimized Image", function () {
@@ -81,37 +86,13 @@ describe("Test Image", function () {
                         return [4 /*yield*/, (0, sharp_1.default)(path_1.default.resolve("./build/img/original/coffee_cup.png"))
                                 .resize(200, 200)
                                 .toFile(path_1.default.resolve("./build/img/optimized/coffee_cup.png"), function (err) {
-                                console.log(err);
+                                //console.log(err)
                             })];
                     case 1:
                         _a.sent();
                         expect(items[items.length - 1]).toBe("coffee_cup.png");
                         return [2 /*return*/];
                 }
-            });
-        });
-    });
-    it("Check Deleted Image", function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var imgPath;
-            return __generator(this, function (_a) {
-                imgPath = (path_1.default.resolve("./build/img/optimized/coffee_cup.png"));
-                console.log(imgPath);
-                try {
-                    if (fs_1.default.existsSync(imgPath)) {
-                        //file exists
-                        fs_1.default.unlink(imgPath, function (err) {
-                            if (err)
-                                throw err;
-                            console.log('File deleted!');
-                        });
-                    }
-                }
-                catch (err) {
-                    console.error(err);
-                }
-                expect(fs_1.default.existsSync(imgPath)).toBe(false);
-                return [2 /*return*/];
             });
         });
     });

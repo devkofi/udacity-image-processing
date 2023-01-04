@@ -7,8 +7,7 @@
     "build": "npx tsc",
     "lint": "eslint \"build/*.js\" ",
     "prettier": "prettier --config .prettierrc.json --write \"build/*.js\" ",
-    "start": "node ./build/server",
-    "nodemon": "nodemon ./build/server localhost 3000",
+    "start": "nodemon ./build/server localhost 3000",
     "test": "jasmine"
   },
   "repository": {
