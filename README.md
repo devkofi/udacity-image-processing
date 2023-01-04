@@ -60,6 +60,8 @@ npm run build
 ```bash
 npm run start
 ```
+Start server at http://localhost:3000
+
 <br/>
 
 ---
@@ -92,3 +94,9 @@ npm run test
 <br/>
 
 
+---
+# END POINTS
+* Index :  `http://localhost:3000`
+* Image Processing : `http://localhost:3000/api/images?filename=coffee_cup.png&width=250&height=200`
+
+<br/><br/>
