@@ -1,9 +1,11 @@
-let bigWidth = (0 as unknown) as number;
+// let bigWidth = (0 as unknown) as number;
 
-const imgSize = function(width: number): number {
-    bigWidth = width;
+// const imgSize = function(width: number): number {
+//     bigWidth = width;
 
-    return width;
-}
+//     return width;
+// }
 
-export default imgSize;
+// export default imgSize;
+
+const flexImage = document.getElementsByTagName("img");
