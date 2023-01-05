@@ -1,5 +1,5 @@
-import express from "express";
-import sharp from "sharp";
+import express, { NextFunction } from "express";
+import imgProcessing from "./utility/imgProcessing";
 import fs from "fs";
 //const express = require('express')
 const app = express()
@@ -11,7 +11,8 @@ const absolutePath: string = __dirname;
 
 app.use(express.static(absolutePath));
 
-const imageProcessing = function (req: express.Request, res: express.Response, next:express.NextFunction) {
+
+const processImage = function (req: express.Request, res: express.Response, next:express.NextFunction): void {
   const width = req.query.width;
   const height = req.query.height;
   const filepath = absolutePath + `/img/optimized/${req.query.filename}.png`;
@@ -42,7 +43,7 @@ const imageProcessing = function (req: express.Request, res: express.Response, n
   next()
 }
 
-app.use(imageProcessing)
+app.use(processImage)
 
 app.get('/', (req: express.Request, res: express.Response)=>{
   res.sendFile(absolutePath + "/displayImage.html")
@@ -51,7 +52,7 @@ app.get('/', (req: express.Request, res: express.Response)=>{
 app.get('/api/images', (req: express.Request, res: express.Response)=>{
   console.log(widths);
   widths.push(Number(req.query.width));
-  widths.push(Number(req.query.height));
+  heights.push(Number(req.query.height));
   try {
     if(Object.keys(req.query).length < 1)
     {
