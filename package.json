@@ -5,8 +5,8 @@
   "main": "./build/index.js",
   "scripts": {
     "build": "npx tsc",
-    "lint": "eslint \"build/*.js\" ",
-    "prettier": "prettier --config .prettierrc.json --write \"build/*.js\" ",
+    "lint": "eslint \"src/*.ts\" ",
+    "prettier": "prettier --config .prettierrc.json --write \"src/*.ts\" ",
     "start": "nodemon ./build/server localhost 3000",
     "test": "jasmine"
   },

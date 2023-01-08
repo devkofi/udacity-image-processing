@@ -1,10 +1,10 @@
 import sharp from "sharp";
 
-const imageProcessing = function (path: string, width: number, height: number): void {
+const imageProcessing = function (inputPath: string, outputPath: string, width: number, height: number): void {
   
-  sharp(path)
+  sharp(inputPath)
     .resize(width, height)
-    .toFile(path, function(err) {
+    .toFile(outputPath, function(err: Error) {
       console.log(err)
     });
 }
