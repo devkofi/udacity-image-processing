@@ -8,9 +8,9 @@ const app = express();
 const port = 3000;
 // const widths: number[] = [];
 // const heights: number[] = [];
-const rootFolder: string = path.resolve("./");
-const optimizedImgPath = rootFolder + "/img/optimized/";
-const originalImgPath = rootFolder + "/img/original/";
+const rootFolder: string = path.resolve(__dirname);
+const optimizedImgPath = rootFolder + "/public/img/optimized/";
+const originalImgPath = rootFolder + "/public/img/original/";
 let accessibleFile = "";
 
 app.use(express.static(rootFolder));
@@ -70,7 +70,7 @@ const processImage = function (
 };
 
 app.get("/", (req: express.Request, res: express.Response) => {
-  res.sendFile(rootFolder + "/displayImage.html");
+  res.sendFile(rootFolder + "/public/displayImage.html");
 });
 
 app.use(processImage);
@@ -81,7 +81,7 @@ app.get("/api/images", (req: express.Request, res: express.Response) => {
   // heights.push(Number(req.query.height));
   try {
     if (Object.keys(req.query).length < 1) {
-      res.sendFile(rootFolder + `/img/original/coffee_cup.png`);
+      res.sendFile(rootFolder + `/public/img/original/coffee_cup.png`);
     } else {
       res.sendFile(accessibleFile);
     }

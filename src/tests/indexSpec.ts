@@ -18,19 +18,20 @@ describe("Test Endpoint Responses", function () {
 
 describe("Test Image Destination", function () {
   it("Get Original Image", () => {
+    console.log(__dirname);
     const items = path
-      .resolve("./build/img/original/coffee_cup.png")
+      .resolve(__dirname + "/public/img/original/coffee_cup.png")
       .split(path.sep);
     expect(items[items.length - 1]).toBe("coffee_cup.png");
   });
   it("Get Optimized Image", async function () {
     const items = path
-      .resolve("./build/img/optimized/coffee_cup.png")
+      .resolve(__dirname + "/public/img/optimized/coffee_cup.png")
       .split(path.sep);
-    await sharp(path.resolve("./build/img/original/coffee_cup.png"))
+    await sharp(path.resolve(__dirname + "/public/img/original/coffee_cup.png"))
       .resize(200, 200)
       .toFile(
-        path.resolve("./build/img/optimized/coffee_cup.png"),
+        path.resolve(__dirname + "/public/img/optimized/coffee_cup.png"),
         function (err) {
           console.log(err)
         }

@@ -49,9 +49,9 @@ var app = (0, express_1.default)();
 var port = 3000;
 // const widths: number[] = [];
 // const heights: number[] = [];
-var rootFolder = path_1.default.resolve("./");
-var optimizedImgPath = rootFolder + "/img/optimized/";
-var originalImgPath = rootFolder + "/img/original/";
+var rootFolder = path_1.default.resolve(__dirname);
+var optimizedImgPath = rootFolder + "/public/img/optimized/";
+var originalImgPath = rootFolder + "/public/img/original/";
 var accessibleFile = "";
 app.use(express_1.default.static(rootFolder));
 var processImage = function (req, res, next) {
@@ -61,17 +61,24 @@ var processImage = function (req, res, next) {
     var filename = function () { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getFileName_1.default.getExactFileByName(originalImgPath, "".concat(req.query.filename))
+                case 0: return [4 /*yield*/, getFileName_1.default
+                        .getExactFileByName(originalImgPath, "".concat(req.query.filename))
                         .then(function (files) {
                         files.forEach(function (file) {
                             try {
                                 var fullPath = originalImgPath + file;
-                                if (fs_1.default.existsSync(optimizedImgPath + "".concat(path_1.default.parse(fullPath).name, "_").concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext))) {
+                                if (fs_1.default.existsSync(optimizedImgPath +
+                                    "".concat(path_1.default.parse(fullPath).name, "_").concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext))) {
                                     console.log("File Exists");
-                                    accessibleFile = optimizedImgPath + "".concat(path_1.default.parse(fullPath).name, "_").concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext);
+                                    accessibleFile =
+                                        optimizedImgPath +
+                                            "".concat(path_1.default.parse(fullPath).name, "_").concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext);
                                 }
                                 else {
-                                    (0, imgProcessing_1.default)(originalImgPath + "".concat(req.query.fileName, ".").concat(path_1.default.parse(fullPath).ext), optimizedImgPath + path_1.default.parse(fullPath).name + "_".concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext), width, height);
+                                    (0, imgProcessing_1.default)(originalImgPath +
+                                        "".concat(req.query.fileName, ".").concat(path_1.default.parse(fullPath).ext), optimizedImgPath +
+                                        path_1.default.parse(fullPath).name +
+                                        "_".concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext), width, height);
                                     accessibleFile = fullPath;
                                 }
                             }
@@ -89,17 +96,17 @@ var processImage = function (req, res, next) {
     filename();
     next();
 };
-app.get('/', function (req, res) {
-    res.sendFile(rootFolder + "/displayImage.html");
+app.get("/", function (req, res) {
+    res.sendFile(rootFolder + "/public/displayImage.html");
 });
 app.use(processImage);
-app.get('/api/images', function (req, res) {
+app.get("/api/images", function (req, res) {
     // console.log(widths);
     // widths.push(Number(req.query.width));
     // heights.push(Number(req.query.height));
     try {
         if (Object.keys(req.query).length < 1) {
-            res.sendFile(rootFolder + "/img/original/coffee_cup.png");
+            res.sendFile(rootFolder + "/public/img/original/coffee_cup.png");
         }
         else {
             res.sendFile(accessibleFile);
