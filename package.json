@@ -2,11 +2,11 @@
   "name": "image-processing",
   "version": "1.0.0",
   "description": "This project is a udacity project to process images on a website",
-  "main": "./build/index.js",
+  "main": "./src/server.js",
   "scripts": {
     "build": "npx tsc",
-    "lint": "eslint \"src/*.ts\" ",
-    "prettier": "prettier --config .prettierrc.json --write \"src/*.ts\" ",
+    "prettier": "prettier --config .prettierrc --write src/**/*.ts ",
+    "lint": "eslint  \"src/**/*.ts\"  ",
     "start": "nodemon ./build/server localhost 3000",
     "test": "jasmine"
   },
