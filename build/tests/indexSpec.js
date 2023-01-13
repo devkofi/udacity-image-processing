@@ -50,7 +50,7 @@ describe("Test Endpoint Responses", function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/')];
+                case 0: return [4 /*yield*/, request.get("/")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(200);
@@ -62,7 +62,7 @@ describe("Test Endpoint Responses", function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/api/images')];
+                case 0: return [4 /*yield*/, request.get("/api/images")];
                 case 1:
                     response = _a.sent();
                     expect(response.status).toBe(200);
@@ -73,7 +73,10 @@ describe("Test Endpoint Responses", function () {
 });
 describe("Test Image Destination", function () {
     it("Get Original Image", function () {
-        var items = (path_1.default.resolve("./build/img/original/coffee_cup.png")).split(path_1.default.sep);
+        console.log(__dirname);
+        var items = path_1.default
+            .resolve(__dirname + "/public/img/original/coffee_cup.png")
+            .split(path_1.default.sep);
         expect(items[items.length - 1]).toBe("coffee_cup.png");
     });
     it("Get Optimized Image", function () {
@@ -82,11 +85,13 @@ describe("Test Image Destination", function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        items = (path_1.default.resolve("./build/img/optimized/coffee_cup.png")).split(path_1.default.sep);
-                        return [4 /*yield*/, (0, sharp_1.default)(path_1.default.resolve("./build/img/original/coffee_cup.png"))
+                        items = path_1.default
+                            .resolve(__dirname + "/public/img/optimized/coffee_cup.png")
+                            .split(path_1.default.sep);
+                        return [4 /*yield*/, (0, sharp_1.default)(path_1.default.resolve(__dirname + "/public/img/original/coffee_cup.png"))
                                 .resize(200, 200)
-                                .toFile(path_1.default.resolve("./build/img/optimized/coffee_cup.png"), function (err) {
-                                //console.log(err)
+                                .toFile(path_1.default.resolve(__dirname + "/public/img/optimized/coffee_cup.png"), function (err) {
+                                console.log(err);
                             })];
                     case 1:
                         _a.sent();
