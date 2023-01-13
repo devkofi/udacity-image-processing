@@ -56,8 +56,8 @@ var accessibleFile = "";
 app.use(express_1.default.static(rootFolder));
 var processImage = function (req, res, next) {
     var _this = this;
-    var width = req.query.width;
-    var height = req.query.height;
+    var width = Number(req.query.width);
+    var height = Number(req.query.height);
     var filename = function () { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {

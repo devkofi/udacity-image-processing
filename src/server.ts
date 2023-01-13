@@ -20,8 +20,8 @@ const processImage = function (
   res: express.Response,
   next: express.NextFunction
 ): void {
-  const width = req.query.width as unknown as number;
-  const height = req.query.height as unknown as number;
+  const width = Number(req.query.width);
+  const height = Number(req.query.height);
 
   const filename = async () => {
     await getFileName

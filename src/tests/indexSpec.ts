@@ -33,7 +33,7 @@ describe("Test Image Destination", function () {
       .toFile(
         path.resolve(__dirname + "/public/img/optimized/coffee_cup.png"),
         function (err) {
-          console.log(err)
+          console.log(err);
         }
       );
     expect(items[items.length - 1]).toBe("coffee_cup.png");

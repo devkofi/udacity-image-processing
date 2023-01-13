@@ -6,6 +6,7 @@
   "scripts": {
     "compile": "npx tsc",
     "copy-files": "copyfiles --error --up 1 src/public/**/*.* build/",
+    "copy-r": "xcopy \"src/public/**/*.*\" \"build/\"",
     "build": "npm run compile && npm run copy-files",
     "prettier": "prettier --config .prettierrc --write src/**/*.ts ",
     "lint": "eslint  \"src/**/*.ts\"  ",
