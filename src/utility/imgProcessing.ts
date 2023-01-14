@@ -1,6 +1,6 @@
 import sharp from "sharp";
 
-const imageProcessing = function (
+const imgProcessor = function (
   inputPath: string,
   outputPath: string,
   width: number,
@@ -13,4 +13,4 @@ const imageProcessing = function (
     });
 };
 
-export default imageProcessing;
+export default imgProcessor;

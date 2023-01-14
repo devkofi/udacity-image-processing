@@ -1,7 +1,7 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import imgProcessing from "./utility/imgProcessing";
+import imgProcessor from "./utility/imgProcessing";
 import getFileName from "./utility/getFileName";
 //const express = require('express')
 const app = express();
@@ -9,8 +9,8 @@ const port = 3000;
 // const widths: number[] = [];
 // const heights: number[] = [];
 const rootFolder: string = path.resolve(__dirname);
-const optimizedImgPath = rootFolder + "/public/img/optimized/";
-const originalImgPath = rootFolder + "/public/img/original/";
+const optimizedImgPath = rootFolder + path.normalize("/public/img/optimized/");
+const originalImgPath = rootFolder + path.normalize("/public/img/original/");
 let accessibleFile = "";
 
 app.use(express.static(rootFolder));
@@ -23,9 +23,9 @@ const processImage = function (
   const width = Number(req.query.width);
   const height = Number(req.query.height);
 
-  const filename = async () => {
-    await getFileName
-      .getExactFileByName(originalImgPath, `${req.query.filename}`)
+  const filename = () => {
+    getFileName
+      .getExactFileByNameAsync(originalImgPath, `${req.query.filename}`)
       .then((files) => {
         files.forEach((file) => {
           try {
@@ -33,7 +33,7 @@ const processImage = function (
             if (
               fs.existsSync(
                 optimizedImgPath +
-                  `${path.parse(fullPath).name}_${req.query.width}_${
+                  `${req.query.name}_${req.query.width}_${
                     req.query.height
                   }.${path.parse(fullPath).ext}`
               )
@@ -41,22 +41,27 @@ const processImage = function (
               console.log("File Exists");
               accessibleFile =
                 optimizedImgPath +
-                `${path.parse(fullPath).name}_${req.query.width}_${
-                  req.query.height
-                }.${path.parse(fullPath).ext}`;
+                `${path.parse(fullPath).name}_${width}_${height}.${path.parse(fullPath).ext}`;
             } else {
-              imgProcessing(
+              if (!fs.existsSync(optimizedImgPath)) {
+                fs.mkdirSync(optimizedImgPath);
+              }
+              imgProcessor(
                 originalImgPath +
-                  `${req.query.fileName}.${path.parse(fullPath).ext}`,
+                  `${req.query.filename}${path.parse(fullPath).ext}`,
                 optimizedImgPath +
-                  path.parse(fullPath).name +
-                  `_${req.query.width}_${req.query.height}.${
+                  req.query.filename +
+                  `_${width}_${height}${
                     path.parse(fullPath).ext
                   }`,
                 width,
                 height
               );
-              accessibleFile = fullPath;
+              accessibleFile =
+                optimizedImgPath +
+                `${path.parse(fullPath).name}_${width}_${height
+                }${path.parse(fullPath).ext}`;
+              console.log("After Processing Image: " + accessibleFile);
             }
           } catch (err) {
             console.error(err);
@@ -69,21 +74,47 @@ const processImage = function (
   next();
 };
 
+const accessImage = function (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+): void {
+  
+  const file = fs.readdirSync(originalImgPath)[0];
+  accessibleFile = optimizedImgPath +
+  `${path.parse(file).name}_${req.query.width}_${req.query.height
+                }${path.parse(file).ext}`;
+  next();
+};
+
 app.get("/", (req: express.Request, res: express.Response) => {
   res.sendFile(rootFolder + "/public/displayImage.html");
 });
 
 app.use(processImage);
+app.use(accessImage);
 
 app.get("/api/images", (req: express.Request, res: express.Response) => {
-  // console.log(widths);
-  // widths.push(Number(req.query.width));
-  // heights.push(Number(req.query.height));
   try {
     if (Object.keys(req.query).length < 1) {
-      res.sendFile(rootFolder + `/public/img/original/coffee_cup.png`);
-    } else {
+      const file = fs.readdirSync(originalImgPath)[0];
+      accessibleFile = originalImgPath +
+    `${path.parse(file).name}${path.parse(file).ext}`;
       res.sendFile(accessibleFile);
+    } 
+    else {
+      console.log("AccessibleFile: " + accessibleFile);
+      
+      const display = async (): Promise<void> =>{
+        let myPromise = new Promise(function(resolve, reject) {
+          resolve(setTimeout(() =>{
+            res.sendFile(accessibleFile);
+          }, 100));
+        });
+        await myPromise;
+      }
+
+      display();
     }
   } catch (err) {
     console.error(err);

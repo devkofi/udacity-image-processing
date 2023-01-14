@@ -41,28 +41,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = __importDefault(require("path"));
 var promises_1 = require("fs/promises");
-var getExactFileByName = function (directory, fileName) { return __awaiter(void 0, void 0, void 0, function () {
-    var matchedFiles, listOfFiles, _i, listOfFiles_1, file, filename;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                matchedFiles = [];
-                return [4 /*yield*/, (0, promises_1.readdir)(directory)];
-            case 1:
-                listOfFiles = _a.sent();
-                for (_i = 0, listOfFiles_1 = listOfFiles; _i < listOfFiles_1.length; _i++) {
-                    file = listOfFiles_1[_i];
-                    filename = path_1.default.parse(file).name;
-                    if (filename === fileName) {
-                        matchedFiles.push(file);
-                    }
-                }
-                return [2 /*return*/, matchedFiles];
+var fs_1 = require("fs");
+var getExactFileByName = function (directory, fileName) {
+    var matchedFiles = [];
+    var listOfFiles = (0, fs_1.readdirSync)(directory);
+    for (var _i = 0, listOfFiles_1 = listOfFiles; _i < listOfFiles_1.length; _i++) {
+        var file = listOfFiles_1[_i];
+        var filename = path_1.default.parse(file).name;
+        if (filename === fileName) {
+            matchedFiles.push(file);
         }
-    });
-}); };
-var getFileNameByPattern = function (directory, fileName) { return __awaiter(void 0, void 0, void 0, function () {
-    var matchedFiles, listOfFiles, _i, listOfFiles_2, file;
+    }
+    return matchedFiles;
+};
+var getExactFileByNameAsync = function (directory, fileName) { return __awaiter(void 0, void 0, void 0, function () {
+    var matchedFiles, listOfFiles, _i, listOfFiles_2, file, filename;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -72,6 +65,37 @@ var getFileNameByPattern = function (directory, fileName) { return __awaiter(voi
                 listOfFiles = _a.sent();
                 for (_i = 0, listOfFiles_2 = listOfFiles; _i < listOfFiles_2.length; _i++) {
                     file = listOfFiles_2[_i];
+                    filename = path_1.default.parse(file).name;
+                    if (filename === fileName) {
+                        matchedFiles.push(file);
+                    }
+                }
+                return [2 /*return*/, matchedFiles];
+        }
+    });
+}); };
+var getFileNameByPattern = function (directory, fileName) {
+    var matchedFiles = [];
+    var listOfFiles = (0, fs_1.readdirSync)(directory);
+    for (var _i = 0, listOfFiles_3 = listOfFiles; _i < listOfFiles_3.length; _i++) {
+        var file = listOfFiles_3[_i];
+        if (file.startsWith(fileName)) {
+            matchedFiles.push(file);
+        }
+    }
+    return matchedFiles;
+};
+var getFileNameByPatternAsync = function (directory, fileName) { return __awaiter(void 0, void 0, void 0, function () {
+    var matchedFiles, listOfFiles, _i, listOfFiles_4, file;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                matchedFiles = [];
+                return [4 /*yield*/, (0, promises_1.readdir)(directory)];
+            case 1:
+                listOfFiles = _a.sent();
+                for (_i = 0, listOfFiles_4 = listOfFiles; _i < listOfFiles_4.length; _i++) {
+                    file = listOfFiles_4[_i];
                     if (file.startsWith(fileName)) {
                         matchedFiles.push(file);
                     }
@@ -80,4 +104,4 @@ var getFileNameByPattern = function (directory, fileName) { return __awaiter(voi
         }
     });
 }); };
-exports.default = { getExactFileByName: getExactFileByName, getFileNameByPattern: getFileNameByPattern };
+exports.default = { getExactFileByName: getExactFileByName, getFileNameByPattern: getFileNameByPattern, getExactFileByNameAsync: getExactFileByNameAsync, getFileNameByPatternAsync: getFileNameByPatternAsync };
