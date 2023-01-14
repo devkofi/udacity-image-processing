@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var sharp_1 = __importDefault(require("sharp"));
 var imageProcessing = function (inputPath, outputPath, width, height) {
     (0, sharp_1.default)(inputPath)
-        .resize(width, height)
+        .resize(Number(width), Number(height))
         .toFile(outputPath, function (err) {
         console.log(err);
     });

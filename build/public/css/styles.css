@@ -11,9 +11,12 @@ img {
 body{
     position: relative;
 }
+
 .centered{
     position:absolute;
     top:50%;
     left:50%;
+    height: 100vh;
     transform: translate(-50%, 0%);
+    border: 1px solid red;
 }

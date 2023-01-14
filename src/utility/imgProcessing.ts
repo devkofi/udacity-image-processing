@@ -7,10 +7,11 @@ const imageProcessing = function (
   height: number
 ): void {
   sharp(inputPath)
-    .resize(width, height)
+    .resize(Number(width), Number(height))
     .toFile(outputPath, function (err: Error) {
       console.log(err);
     });
+  
 };
 
 export default imageProcessing;

@@ -9,11 +9,12 @@ const port = 3000;
 // const widths: number[] = [];
 // const heights: number[] = [];
 const rootFolder: string = path.resolve(__dirname);
-const optimizedImgPath = rootFolder + "/public/img/optimized/";
-const originalImgPath = rootFolder + "/public/img/original/";
+const optimizedImgPath = rootFolder + path.normalize("/public/img/optimized/");
+const originalImgPath = rootFolder + path.normalize("/public/img/original/");
 let accessibleFile = "";
+let fullPath = "";
 
-app.use(express.static(rootFolder));
+app.use(express.static(rootFolder+"/public/"));
 
 const processImage = function (
   req: express.Request,
@@ -23,66 +24,102 @@ const processImage = function (
   const width = Number(req.query.width);
   const height = Number(req.query.height);
 
-  const filename = async () => {
-    await getFileName
-      .getExactFileByName(originalImgPath, `${req.query.filename}`)
-      .then((files) => {
-        files.forEach((file) => {
-          try {
-            const fullPath = originalImgPath + file;
-            if (
-              fs.existsSync(
-                optimizedImgPath +
-                  `${path.parse(fullPath).name}_${req.query.width}_${
-                    req.query.height
-                  }.${path.parse(fullPath).ext}`
-              )
-            ) {
-              console.log("File Exists");
-              accessibleFile =
-                optimizedImgPath +
-                `${path.parse(fullPath).name}_${req.query.width}_${
-                  req.query.height
-                }.${path.parse(fullPath).ext}`;
-            } else {
-              imgProcessing(
-                originalImgPath +
-                  `${req.query.fileName}.${path.parse(fullPath).ext}`,
-                optimizedImgPath +
-                  path.parse(fullPath).name +
-                  `_${req.query.width}_${req.query.height}.${
-                    path.parse(fullPath).ext
-                  }`,
-                width,
-                height
-              );
-              accessibleFile = fullPath;
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        });
-      });
-  };
+  const filename = getFileName
+  .getExactFileByName(originalImgPath, `${req.query.filename}`);
+  
+  filename.then((files) => {
+    files.forEach((file) => {
+      try {
+        fullPath = originalImgPath + file;
+        if (
+          fs.existsSync(
+            optimizedImgPath +
+              `${path.parse(fullPath).name}_${req.query.width}_${
+                req.query.height
+              }${path.parse(fullPath).ext}`
+          )
+        ) {
+          console.log("File Exists");
+          accessibleFile =
+            optimizedImgPath +
+            `${path.parse(fullPath).name}_${req.query.width}_${
+              req.query.height
+            }${path.parse(fullPath).ext}`;
 
-  filename();
+          console.log(accessibleFile);
+
+        } else {
+          console.log("File Name: " + path.parse(fullPath).name);
+          console.log("File Extension: " + path.parse(fullPath).ext);
+          console.log("File Extension: " + req.query.width);
+          console.log("File Extension: " + req.query.height);
+          console.log(file);
+
+          if (!fs.existsSync(optimizedImgPath)) {
+            fs.mkdirSync(optimizedImgPath);
+          }
+
+          const process = async () => await Promise.resolve(imgProcessing(
+            originalImgPath +
+              `${req.query.filename}${path.parse(fullPath).ext}`,
+            optimizedImgPath +
+              path.parse(fullPath).name +
+              `_${req.query.width}_${req.query.height}${
+                path.parse(fullPath).ext
+              }`, width,height));
+          
+            process();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  });
+    
   next();
 };
+
+const loadImage = function(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction): void{
+
+  accessibleFile = optimizedImgPath + req.query.filename + `_${req.query.width}_${req.query.height}${
+  path.parse(fs.readdirSync(originalImgPath)[0]).ext}`; 
+  next();
+}
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.sendFile(rootFolder + "/public/displayImage.html");
 });
 
 app.use(processImage);
-
+app.use(loadImage);
 app.get("/api/images", (req: express.Request, res: express.Response) => {
-  // console.log(widths);
-  // widths.push(Number(req.query.width));
-  // heights.push(Number(req.query.height));
+  
+  if (Object.keys(req.query).length < 1) {
+    const emptyFile = originalImgPath + req.query.filename + `${
+      path.parse(fs.readdirSync(originalImgPath)[0]).ext}`; 
+    res.sendFile(emptyFile);
+  }
+
   try {
-    if (Object.keys(req.query).length < 1) {
-      res.sendFile(rootFolder + `/public/img/original/coffee_cup.png`);
-    } else {
+    
+    if(!
+      fs.existsSync(
+        optimizedImgPath +
+          `${req.query.filename}_${req.query.width}_${req.query.height
+          }${path.parse(fullPath).ext}`
+      )){
+        
+          let tempPath = "";
+            
+             tempPath = originalImgPath + path.parse(fs.readdirSync(originalImgPath)[0]).name + `_${req.query.width}_${req.query.height}${
+                path.parse(fs.readdirSync(originalImgPath)[0]).ext}`;
+      
+          res.sendFile(tempPath);
+    }
+    else {
       res.sendFile(accessibleFile);
     }
   } catch (err) {

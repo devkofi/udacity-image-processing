@@ -37,4 +37,23 @@ const getFileNameByPattern = async (
   return matchedFiles;
 };
 
-export default { getExactFileByName, getFileNameByPattern };
+const getExtension = function(directory: string,
+  fileName: string): string {
+    const filename = getExactFileByName(directory, fileName);
+    let extension = "";
+    filename.then((files) => {
+      files.forEach((file) => {
+        
+        try {
+          const tempPath = directory + file;
+          extension = path.parse(tempPath).ext;
+        } catch (err) {
+          console.error(err);
+        }
+      });
+      
+    });
+    return extension;
+}
+
+export default { getExactFileByName, getFileNameByPattern, getExtension };

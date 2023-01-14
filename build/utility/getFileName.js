@@ -80,4 +80,20 @@ var getFileNameByPattern = function (directory, fileName) { return __awaiter(voi
         }
     });
 }); };
-exports.default = { getExactFileByName: getExactFileByName, getFileNameByPattern: getFileNameByPattern };
+var getExtension = function (directory, fileName) {
+    var filename = getExactFileByName(directory, fileName);
+    var extension = "";
+    filename.then(function (files) {
+        files.forEach(function (file) {
+            try {
+                var tempPath = directory + file;
+                extension = path_1.default.parse(tempPath).ext;
+            }
+            catch (err) {
+                console.error(err);
+            }
+        });
+    });
+    return extension;
+};
+exports.default = { getExactFileByName: getExactFileByName, getFileNameByPattern: getFileNameByPattern, getExtension: getExtension };
