@@ -1,7 +1,28 @@
 import path from "path";
 import { readdir } from "fs/promises";
+import { readdirSync } from "fs";
 
-const getExactFileByName = async (
+
+const getExactFileByName =  (
+  directory: string,
+  fileName: string
+): string[] => {
+  const matchedFiles = [];
+
+  const listOfFiles = readdirSync(directory);
+
+  for (const file of listOfFiles) {
+    const filename = path.parse(file).name;
+
+    if (filename === fileName) {
+      matchedFiles.push(file);
+    }
+  }
+
+  return matchedFiles;
+};
+
+const getExactFileByNameAsync = async (
   directory: string,
   fileName: string
 ): Promise<string[]> => {
@@ -20,7 +41,24 @@ const getExactFileByName = async (
   return matchedFiles;
 };
 
-const getFileNameByPattern = async (
+const getFileNameByPattern = (
+  directory: string,
+  fileName: string
+): string[] => {
+  const matchedFiles = [];
+
+  const listOfFiles = readdirSync(directory);
+
+  for (const file of listOfFiles) {
+    if (file.startsWith(fileName)) {
+      matchedFiles.push(file);
+    }
+  }
+
+  return matchedFiles;
+};
+
+const getFileNameByPatternAsync = async (
   directory: string,
   fileName: string
 ): Promise<string[]> => {
@@ -37,23 +75,8 @@ const getFileNameByPattern = async (
   return matchedFiles;
 };
 
-const getExtension = function(directory: string,
-  fileName: string): string {
-    const filename = getExactFileByName(directory, fileName);
-    let extension = "";
-    filename.then((files) => {
-      files.forEach((file) => {
-        
-        try {
-          const tempPath = directory + file;
-          extension = path.parse(tempPath).ext;
-        } catch (err) {
-          console.error(err);
-        }
-      });
-      
-    });
-    return extension;
-}
+export default { getExactFileByName, getFileNameByPattern, getExactFileByNameAsync, getFileNameByPatternAsync};
 
-export default { getExactFileByName, getFileNameByPattern, getExtension };
+
+
+
