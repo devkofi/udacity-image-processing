@@ -1,5 +1,12 @@
 import sharp from "sharp";
 
+/**
+ * @description This processes the image for resizing
+ * @param inputPath Gets the input path
+ * @param outputPath Gets the output path where the file will be stored
+ * @param width Gets the width for the image to be resized
+ * @param height Gets the height for the image to be resized
+ */
 const imgProcessor = function (
   inputPath: string,
   outputPath: string,
@@ -11,7 +18,6 @@ const imgProcessor = function (
     .toFile(outputPath, function (err: Error) {
       console.log(err);
     });
-  
 };
 
 export default imgProcessor;

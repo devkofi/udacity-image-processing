@@ -53,8 +53,7 @@ var rootFolder = path_1.default.resolve(__dirname);
 var optimizedImgPath = rootFolder + path_1.default.normalize("/public/img/optimized/");
 var originalImgPath = rootFolder + path_1.default.normalize("/public/img/original/");
 var accessibleFile = "";
-var fullPath = "";
-app.use(express_1.default.static(rootFolder + "/public/"));
+app.use(express_1.default.static(rootFolder));
 var processImage = function (req, res, next) {
     var width = Number(req.query.width);
     var height = Number(req.query.height);
@@ -107,9 +106,6 @@ app.get("/", function (req, res) {
 app.use(processImage);
 app.use(accessImage);
 app.get("/api/images", function (req, res) {
-    // console.log(widths);
-    // widths.push(Number(req.query.width));
-    // heights.push(Number(req.query.height));
     try {
         if (Object.keys(req.query).length < 1) {
             var file = fs_1.default.readdirSync(originalImgPath)[0];
@@ -124,7 +120,7 @@ app.get("/api/images", function (req, res) {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            myPromise = new Promise(function (resolve, reject) {
+                            myPromise = new Promise(function (resolve) {
                                 resolve(setTimeout(function () {
                                     res.sendFile(accessibleFile);
                                 }, 100));
@@ -137,7 +133,6 @@ app.get("/api/images", function (req, res) {
                 });
             }); };
             display();
-            // res.sendFile(accessibleFile);
         }
     }
     catch (err) {

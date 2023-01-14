@@ -2,11 +2,13 @@ import path from "path";
 import { readdir } from "fs/promises";
 import { readdirSync } from "fs";
 
-
-const getExactFileByName =  (
-  directory: string,
-  fileName: string
-): string[] => {
+/**
+ * @description This is a function that gets the filename
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
+const getExactFileByName = (directory: string, fileName: string): string[] => {
   const matchedFiles = [];
 
   const listOfFiles = readdirSync(directory);
@@ -22,6 +24,12 @@ const getExactFileByName =  (
   return matchedFiles;
 };
 
+/**
+ * @description This is an asynchronous function that gets the filename
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
 const getExactFileByNameAsync = async (
   directory: string,
   fileName: string
@@ -41,6 +49,12 @@ const getExactFileByNameAsync = async (
   return matchedFiles;
 };
 
+/**
+ * @description This is a function that gets the filename based on a pattern
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
 const getFileNameByPattern = (
   directory: string,
   fileName: string
@@ -58,6 +72,12 @@ const getFileNameByPattern = (
   return matchedFiles;
 };
 
+/**
+ * @description This is an asynchronous function that gets the filename based on a pattern
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
 const getFileNameByPatternAsync = async (
   directory: string,
   fileName: string
@@ -75,8 +95,9 @@ const getFileNameByPatternAsync = async (
   return matchedFiles;
 };
 
-export default { getExactFileByName, getFileNameByPattern, getExactFileByNameAsync, getFileNameByPatternAsync};
-
-
-
-
+export default {
+  getExactFileByName,
+  getFileNameByPattern,
+  getExactFileByNameAsync,
+  getFileNameByPatternAsync,
+};
