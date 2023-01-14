@@ -96,8 +96,9 @@ var processImage = function (req, res, next) {
 };
 var accessImage = function (req, res, next) {
     var file = fs_1.default.readdirSync(originalImgPath)[0];
-    accessibleFile = optimizedImgPath +
-        "".concat(path_1.default.parse(file).name, "_").concat(req.query.width, "_").concat(req.query.height).concat(path_1.default.parse(file).ext);
+    accessibleFile =
+        optimizedImgPath +
+            "".concat(path_1.default.parse(file).name, "_").concat(req.query.width, "_").concat(req.query.height).concat(path_1.default.parse(file).ext);
     next();
 };
 app.get("/", function (req, res) {
@@ -109,8 +110,8 @@ app.get("/api/images", function (req, res) {
     try {
         if (Object.keys(req.query).length < 1) {
             var file = fs_1.default.readdirSync(originalImgPath)[0];
-            accessibleFile = originalImgPath +
-                "".concat(path_1.default.parse(file).name).concat(path_1.default.parse(file).ext);
+            accessibleFile =
+                originalImgPath + "".concat(path_1.default.parse(file).name).concat(path_1.default.parse(file).ext);
             res.sendFile(accessibleFile);
         }
         else {

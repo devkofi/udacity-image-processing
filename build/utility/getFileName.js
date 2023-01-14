@@ -42,6 +42,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = __importDefault(require("path"));
 var promises_1 = require("fs/promises");
 var fs_1 = require("fs");
+/**
+ * @description This is a function that gets the filename
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
 var getExactFileByName = function (directory, fileName) {
     var matchedFiles = [];
     var listOfFiles = (0, fs_1.readdirSync)(directory);
@@ -54,6 +60,12 @@ var getExactFileByName = function (directory, fileName) {
     }
     return matchedFiles;
 };
+/**
+ * @description This is an asynchronous function that gets the filename
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
 var getExactFileByNameAsync = function (directory, fileName) { return __awaiter(void 0, void 0, void 0, function () {
     var matchedFiles, listOfFiles, _i, listOfFiles_2, file, filename;
     return __generator(this, function (_a) {
@@ -74,6 +86,12 @@ var getExactFileByNameAsync = function (directory, fileName) { return __awaiter(
         }
     });
 }); };
+/**
+ * @description This is a function that gets the filename based on a pattern
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
 var getFileNameByPattern = function (directory, fileName) {
     var matchedFiles = [];
     var listOfFiles = (0, fs_1.readdirSync)(directory);
@@ -85,6 +103,12 @@ var getFileNameByPattern = function (directory, fileName) {
     }
     return matchedFiles;
 };
+/**
+ * @description This is an asynchronous function that gets the filename based on a pattern
+ * @param directory Gets the directory where the file is located
+ * @param fileName Gets the filename
+ * @returns string[]
+ */
 var getFileNameByPatternAsync = function (directory, fileName) { return __awaiter(void 0, void 0, void 0, function () {
     var matchedFiles, listOfFiles, _i, listOfFiles_4, file;
     return __generator(this, function (_a) {
@@ -104,4 +128,9 @@ var getFileNameByPatternAsync = function (directory, fileName) { return __awaite
         }
     });
 }); };
-exports.default = { getExactFileByName: getExactFileByName, getFileNameByPattern: getFileNameByPattern, getExactFileByNameAsync: getExactFileByNameAsync, getFileNameByPatternAsync: getFileNameByPatternAsync };
+exports.default = {
+    getExactFileByName: getExactFileByName,
+    getFileNameByPattern: getFileNameByPattern,
+    getExactFileByNameAsync: getExactFileByNameAsync,
+    getFileNameByPatternAsync: getFileNameByPatternAsync,
+};
