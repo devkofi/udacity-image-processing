@@ -7,7 +7,7 @@ import sharp from "sharp";
  * @param width Gets the width for the image to be resized
  * @param height Gets the height for the image to be resized
  */
-const imgProcessor = function (
+const resizeImage = function (
   inputPath: string,
   outputPath: string,
   width: number,
@@ -20,4 +20,4 @@ const imgProcessor = function (
     });
 };
 
-export default imgProcessor;
+export default resizeImage;

@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
-var imgProcessing_1 = __importDefault(require("./utility/imgProcessing"));
+var resizeImage_1 = __importDefault(require("./utility/resizeImage"));
 var getFileName_1 = __importDefault(require("./utility/getFileName"));
 //const express = require('express')
 var app = (0, express_1.default)();
@@ -52,50 +52,65 @@ var port = 3000;
 var rootFolder = path_1.default.resolve(__dirname);
 var optimizedImgPath = rootFolder + path_1.default.normalize("/public/img/optimized/");
 var originalImgPath = rootFolder + path_1.default.normalize("/public/img/original/");
+var file = fs_1.default.readdirSync(originalImgPath)[0];
 var accessibleFile = "";
 app.use(express_1.default.static(rootFolder));
 var processImage = function (req, res, next) {
-    var width = Number(req.query.width);
-    var height = Number(req.query.height);
-    var filename = function () {
-        getFileName_1.default
-            .getExactFileByNameAsync(originalImgPath, "".concat(req.query.filename))
-            .then(function (files) {
-            files.forEach(function (file) {
-                try {
-                    var fullPath = originalImgPath + file;
-                    if (fs_1.default.existsSync(optimizedImgPath +
-                        "".concat(req.query.name, "_").concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext))) {
-                        console.log("File Exists");
-                        accessibleFile =
-                            optimizedImgPath +
-                                "".concat(path_1.default.parse(fullPath).name, "_").concat(width, "_").concat(height, ".").concat(path_1.default.parse(fullPath).ext);
-                    }
-                    else {
-                        if (!fs_1.default.existsSync(optimizedImgPath)) {
-                            fs_1.default.mkdirSync(optimizedImgPath);
+    var width = Number.parseInt("".concat(req.query.width)) < 10 ? 10 : Number.parseInt("".concat(req.query.width));
+    var height = Number.parseInt("".concat(req.query.height)) < 10 ? 10 : Number.parseInt("".concat(req.query.height));
+    var name = req.query.name;
+    if (Object.keys(req.query).length < 1) {
+        accessibleFile =
+            originalImgPath + "".concat(path_1.default.parse(file).name).concat(path_1.default.parse(file).ext);
+        res.sendFile(accessibleFile);
+    }
+    else if (typeof name === 'undefined' || typeof width === 'undefined' || typeof height === 'undefined') {
+        //res.sendFile(accessibleFile);
+        res.send("<h1> ERROR!!!</h1>\n              <ol>\n                <li><p>Please provide these three(3) query fields: <em><b>name</b></em>, <em><b>width</b></em> and <em><b>height</b></em></p></li>\n                <li><p><em><b>name</b></em> should contain the name of the file in the original img folder</p></li>\n                <li><p><em><b>height</b></em> should not be less than or equal to 0 and it should also not be a text</p></li>\n                <li><p><em><b>width</b></em> should not be less than or equal to 0 and it should also not be a text</p></li>\n              </ol>\n              ");
+    }
+    else if (name !== path_1.default.parse(file).name) {
+        res.send("\n            <h1> ERROR!!!</h1>\n            <p>Name of the file does not exist. Please provide a correct file name</p>\n    \n    ");
+    }
+    else {
+        var filename = function () {
+            getFileName_1.default
+                .getExactFileByNameAsync(originalImgPath, "".concat(name))
+                .then(function (files) {
+                files.forEach(function (file) {
+                    try {
+                        var fullPath = originalImgPath + file;
+                        if (fs_1.default.existsSync(optimizedImgPath +
+                            "".concat(name, "_").concat(req.query.width, "_").concat(req.query.height, ".").concat(path_1.default.parse(fullPath).ext))) {
+                            console.log("File Exists");
+                            accessibleFile =
+                                optimizedImgPath +
+                                    "".concat(path_1.default.parse(fullPath).name, "_").concat(width, "_").concat(height, ".").concat(path_1.default.parse(fullPath).ext);
                         }
-                        (0, imgProcessing_1.default)(originalImgPath +
-                            "".concat(req.query.filename).concat(path_1.default.parse(fullPath).ext), optimizedImgPath +
-                            req.query.filename +
-                            "_".concat(width, "_").concat(height).concat(path_1.default.parse(fullPath).ext), width, height);
-                        accessibleFile =
-                            optimizedImgPath +
-                                "".concat(path_1.default.parse(fullPath).name, "_").concat(width, "_").concat(height).concat(path_1.default.parse(fullPath).ext);
-                        console.log("After Processing Image: " + accessibleFile);
+                        else {
+                            if (!fs_1.default.existsSync(optimizedImgPath)) {
+                                fs_1.default.mkdirSync(optimizedImgPath);
+                            }
+                            (0, resizeImage_1.default)(originalImgPath +
+                                "".concat(req.query.name).concat(path_1.default.parse(fullPath).ext), optimizedImgPath +
+                                req.query.name +
+                                "_".concat(width, "_").concat(height).concat(path_1.default.parse(fullPath).ext), width, height);
+                            accessibleFile =
+                                optimizedImgPath +
+                                    "".concat(path_1.default.parse(fullPath).name, "_").concat(width, "_").concat(height).concat(path_1.default.parse(fullPath).ext);
+                            console.log("After Processing Image: " + accessibleFile);
+                        }
                     }
-                }
-                catch (err) {
-                    console.error(err);
-                }
+                    catch (err) {
+                        res.redirect("/api/images");
+                    }
+                });
             });
-        });
-    };
-    filename();
-    next();
+        };
+        filename();
+        next();
+    }
 };
 var accessImage = function (req, res, next) {
-    var file = fs_1.default.readdirSync(originalImgPath)[0];
     accessibleFile =
         optimizedImgPath +
             "".concat(path_1.default.parse(file).name, "_").concat(req.query.width, "_").concat(req.query.height).concat(path_1.default.parse(file).ext);
@@ -108,36 +123,46 @@ app.use(processImage);
 app.use(accessImage);
 app.get("/api/images", function (req, res) {
     try {
-        if (Object.keys(req.query).length < 1) {
-            var file = fs_1.default.readdirSync(originalImgPath)[0];
-            accessibleFile =
-                originalImgPath + "".concat(path_1.default.parse(file).name).concat(path_1.default.parse(file).ext);
-            res.sendFile(accessibleFile);
-        }
-        else {
-            console.log("AccessibleFile: " + accessibleFile);
-            var display = function () { return __awaiter(void 0, void 0, void 0, function () {
-                var myPromise;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            myPromise = new Promise(function (resolve) {
-                                resolve(setTimeout(function () {
-                                    res.sendFile(accessibleFile);
-                                }, 100));
-                            });
-                            return [4 /*yield*/, myPromise];
-                        case 1:
-                            _a.sent();
-                            return [2 /*return*/];
-                    }
-                });
-            }); };
-            display();
-        }
+        // if (Object.keys(req.query).length < 1) {
+        //   accessibleFile =
+        //     originalImgPath + `${path.parse(file).name}${path.parse(file).ext}`;
+        //   res.sendFile(accessibleFile);
+        // } else {
+        //   console.log("AccessibleFile: " + accessibleFile);
+        //   const display = async (): Promise<void> => {
+        //     const myPromise = new Promise((resolve) => {
+        //       resolve(
+        //         setTimeout(() => {
+        //           res.sendFile(accessibleFile);
+        //         }, 100)
+        //       );
+        //     });
+        //     await myPromise;
+        //   };
+        //   display();
+        // }
+        console.log("AccessibleFile: " + accessibleFile);
+        var display = function () { return __awaiter(void 0, void 0, void 0, function () {
+            var myPromise;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        myPromise = new Promise(function (resolve) {
+                            resolve(setTimeout(function () {
+                                res.sendFile(accessibleFile);
+                            }, 100));
+                        });
+                        return [4 /*yield*/, myPromise];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+        display();
     }
     catch (err) {
-        console.error(err);
+        console.error("Unimaginable Error");
     }
 });
 app.listen(port, function () {
