@@ -21,20 +21,30 @@ const processImage = function (
   res: express.Response,
   next: express.NextFunction
 ): void {
-  const width = Number.parseInt(`${req.query.width}`) < 10 ? 10 : Number.parseInt(`${req.query.width}`);
-  const height = Number.parseInt(`${req.query.height}`) < 10 ? 10 : Number.parseInt(`${req.query.height}`);
+  const width =
+    Number.parseInt(`${req.query.width}`) < 10
+      ? 10
+      : Number.parseInt(`${req.query.width}`);
+  const height =
+    Number.parseInt(`${req.query.height}`) < 10
+      ? 10
+      : Number.parseInt(`${req.query.height}`);
   const name = req.query.name;
 
   if (Object.keys(req.query).length < 1) {
-      
     accessibleFile =
       originalImgPath + `${path.parse(file).name}${path.parse(file).ext}`;
     res.sendFile(accessibleFile);
-  }
-
-  else if(typeof name === 'undefined' || typeof name === null || typeof width === 'undefined' ||typeof width === null || typeof height === 'undefined' || typeof height === null){
-      //res.sendFile(accessibleFile);
-      res.send(`<h1> ERROR!!!</h1>
+  } else if (
+    typeof name === "undefined" ||
+    typeof name === null ||
+    typeof width === "undefined" ||
+    typeof width === null ||
+    typeof height === "undefined" ||
+    typeof height === null
+  ) {
+    //res.sendFile(accessibleFile);
+    res.send(`<h1> ERROR!!!</h1>
               <ol>
                 <li><p>Please provide these three(3) query fields: <em><b>name</b></em>, <em><b>width</b></em> and <em><b>height</b></em></p></li>
                 <li><p><em><b>name</b></em> should contain the name of the file in the original img folder</p></li>
@@ -42,19 +52,14 @@ const processImage = function (
                 <li><p><em><b>width</b></em> should not be less than or equal to 0 and it should also not be a text</p></li>
               </ol>
               `);
-  }
-
-  else if(name !== path.parse(file).name){
+  } else if (name !== path.parse(file).name) {
     res.send(`
             <h1> ERROR!!!</h1>
             <p>Name of the file does not exist. Please provide a correct file name</p>
     
-    `)
-  }
-
-  else{
+    `);
+  } else {
     const filename = () => {
-    
       getFileName
         .getExactFileByNameAsync(originalImgPath, `${name}`)
         .then((files) => {
@@ -95,20 +100,17 @@ const processImage = function (
                   }`;
                 console.log("After Processing Image: " + accessibleFile);
               }
-  
             } catch (err) {
               res.redirect("/api/images");
-              
             }
           });
         });
     };
-  
+
     filename();
-    
+
     next();
   }
-  
 };
 
 const accessImage = function (
@@ -116,7 +118,6 @@ const accessImage = function (
   res: express.Response,
   next: express.NextFunction
 ): void {
-  
   accessibleFile =
     optimizedImgPath +
     `${path.parse(file).name}_${req.query.width}_${req.query.height}${
@@ -136,18 +137,18 @@ app.get("/api/images", (req: express.Request, res: express.Response) => {
   try {
     console.log("AccessibleFile: " + accessibleFile);
 
-      const display = async (): Promise<void> => {
-        const myPromise = new Promise((resolve) => {
-          resolve(
-            setTimeout(() => {
-              res.sendFile(accessibleFile);
-            }, 100)
-          );
-        });
-        await myPromise;
-      };
+    const display = async (): Promise<void> => {
+      const myPromise = new Promise((resolve) => {
+        resolve(
+          setTimeout(() => {
+            res.sendFile(accessibleFile);
+          }, 100)
+        );
+      });
+      await myPromise;
+    };
 
-      display();
+    display();
   } catch (err) {
     console.error(err);
   }

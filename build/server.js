@@ -56,15 +56,24 @@ var file = fs_1.default.readdirSync(originalImgPath)[0];
 var accessibleFile = "";
 app.use(express_1.default.static(rootFolder));
 var processImage = function (req, res, next) {
-    var width = Number.parseInt("".concat(req.query.width)) < 10 ? 10 : Number.parseInt("".concat(req.query.width));
-    var height = Number.parseInt("".concat(req.query.height)) < 10 ? 10 : Number.parseInt("".concat(req.query.height));
+    var width = Number.parseInt("".concat(req.query.width)) < 10
+        ? 10
+        : Number.parseInt("".concat(req.query.width));
+    var height = Number.parseInt("".concat(req.query.height)) < 10
+        ? 10
+        : Number.parseInt("".concat(req.query.height));
     var name = req.query.name;
     if (Object.keys(req.query).length < 1) {
         accessibleFile =
             originalImgPath + "".concat(path_1.default.parse(file).name).concat(path_1.default.parse(file).ext);
         res.sendFile(accessibleFile);
     }
-    else if (typeof name === 'undefined' || typeof name === null || typeof width === 'undefined' || typeof width === null || typeof height === 'undefined' || typeof height === null) {
+    else if (typeof name === "undefined" ||
+        typeof name === null ||
+        typeof width === "undefined" ||
+        typeof width === null ||
+        typeof height === "undefined" ||
+        typeof height === null) {
         //res.sendFile(accessibleFile);
         res.send("<h1> ERROR!!!</h1>\n              <ol>\n                <li><p>Please provide these three(3) query fields: <em><b>name</b></em>, <em><b>width</b></em> and <em><b>height</b></em></p></li>\n                <li><p><em><b>name</b></em> should contain the name of the file in the original img folder</p></li>\n                <li><p><em><b>height</b></em> should not be less than or equal to 0 and it should also not be a text</p></li>\n                <li><p><em><b>width</b></em> should not be less than or equal to 0 and it should also not be a text</p></li>\n              </ol>\n              ");
     }
