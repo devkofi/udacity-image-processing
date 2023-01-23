@@ -64,7 +64,7 @@ var processImage = function (req, res, next) {
             originalImgPath + "".concat(path_1.default.parse(file).name).concat(path_1.default.parse(file).ext);
         res.sendFile(accessibleFile);
     }
-    else if (typeof name === 'undefined' || typeof width === 'undefined' || typeof height === 'undefined') {
+    else if (typeof name === 'undefined' || typeof name === null || typeof width === 'undefined' || typeof width === null || typeof height === 'undefined' || typeof height === null) {
         //res.sendFile(accessibleFile);
         res.send("<h1> ERROR!!!</h1>\n              <ol>\n                <li><p>Please provide these three(3) query fields: <em><b>name</b></em>, <em><b>width</b></em> and <em><b>height</b></em></p></li>\n                <li><p><em><b>name</b></em> should contain the name of the file in the original img folder</p></li>\n                <li><p><em><b>height</b></em> should not be less than or equal to 0 and it should also not be a text</p></li>\n                <li><p><em><b>width</b></em> should not be less than or equal to 0 and it should also not be a text</p></li>\n              </ol>\n              ");
     }
@@ -117,30 +117,12 @@ var accessImage = function (req, res, next) {
     next();
 };
 app.get("/", function (req, res) {
-    res.sendFile(rootFolder + "/public/displayImage.html");
+    res.sendFile(rootFolder + path_1.default.normalize("/public/displayImage.html"));
 });
 app.use(processImage);
 app.use(accessImage);
 app.get("/api/images", function (req, res) {
     try {
-        // if (Object.keys(req.query).length < 1) {
-        //   accessibleFile =
-        //     originalImgPath + `${path.parse(file).name}${path.parse(file).ext}`;
-        //   res.sendFile(accessibleFile);
-        // } else {
-        //   console.log("AccessibleFile: " + accessibleFile);
-        //   const display = async (): Promise<void> => {
-        //     const myPromise = new Promise((resolve) => {
-        //       resolve(
-        //         setTimeout(() => {
-        //           res.sendFile(accessibleFile);
-        //         }, 100)
-        //       );
-        //     });
-        //     await myPromise;
-        //   };
-        //   display();
-        // }
         console.log("AccessibleFile: " + accessibleFile);
         var display = function () { return __awaiter(void 0, void 0, void 0, function () {
             var myPromise;
@@ -162,7 +144,7 @@ app.get("/api/images", function (req, res) {
         display();
     }
     catch (err) {
-        console.error("Unimaginable Error");
+        console.error(err);
     }
 });
 app.listen(port, function () {

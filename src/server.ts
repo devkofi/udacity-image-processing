@@ -32,7 +32,7 @@ const processImage = function (
     res.sendFile(accessibleFile);
   }
 
-  else if(typeof name === 'undefined' || typeof width === 'undefined' || typeof height === 'undefined'){
+  else if(typeof name === 'undefined' || typeof name === null || typeof width === 'undefined' ||typeof width === null || typeof height === 'undefined' || typeof height === null){
       //res.sendFile(accessibleFile);
       res.send(`<h1> ERROR!!!</h1>
               <ol>
@@ -108,8 +108,6 @@ const processImage = function (
     
     next();
   }
-
-
   
 };
 
@@ -128,7 +126,7 @@ const accessImage = function (
 };
 
 app.get("/", (req: express.Request, res: express.Response) => {
-  res.sendFile(rootFolder + "/public/displayImage.html");
+  res.sendFile(rootFolder + path.normalize("/public/displayImage.html"));
 });
 
 app.use(processImage);
@@ -136,30 +134,6 @@ app.use(accessImage);
 
 app.get("/api/images", (req: express.Request, res: express.Response) => {
   try {
-    // if (Object.keys(req.query).length < 1) {
-      
-    //   accessibleFile =
-    //     originalImgPath + `${path.parse(file).name}${path.parse(file).ext}`;
-    //   res.sendFile(accessibleFile);
-    // } else {
-    //   console.log("AccessibleFile: " + accessibleFile);
-
-    //   const display = async (): Promise<void> => {
-    //     const myPromise = new Promise((resolve) => {
-    //       resolve(
-    //         setTimeout(() => {
-    //           res.sendFile(accessibleFile);
-    //         }, 100)
-    //       );
-    //     });
-    //     await myPromise;
-    //   };
-
-    
-
-    //   display();
-    // }
-
     console.log("AccessibleFile: " + accessibleFile);
 
       const display = async (): Promise<void> => {
@@ -175,7 +149,7 @@ app.get("/api/images", (req: express.Request, res: express.Response) => {
 
       display();
   } catch (err) {
-    console.error("Unimaginable Error");
+    console.error(err);
   }
 });
 
