@@ -97,6 +97,7 @@ npm run test
 ---
 # END POINTS
 * Index :  `http://localhost:3000`
-* Image Processing : `http://localhost:3000/api/images?name=coffee_cup&width=250&height=200`
+* Image Processing : `http://localhost:3000/api/images`
+** Resize Image : `http://localhost:3000/api/images?name=coffee_cup&width=250&height=200`
 
 <br/><br/>
