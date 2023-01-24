@@ -41,6 +41,7 @@ Find [project rubric, here](https://review.udacity.com/#!/rubrics/3005/view).
 <br/>
 
 ```bash
+npm install -g jasmine
 npm install
 ```
 <br/>
